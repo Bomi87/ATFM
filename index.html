@@ -283,17 +283,25 @@ button {
       color: #92400e;
     }
 
-    .field {
-      margin: 6px 0;
-      line-height: 1.45;
-      font-size: 13px;
-    }
+.field {
+  margin: 6px 0;
+  line-height: 1.45;
+  font-size: 13px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
 
-    .field strong {
-      display: inline-block;
-      min-width: 82px;
-      color: #374151;
-    }
+.field strong {
+  flex: 0 0 64px;
+  color: #374151;
+  font-weight: 800;
+}
+
+.field span {
+  flex: 1;
+  min-width: 0;
+}
 
 .reg-box {
   white-space: pre-wrap;
@@ -395,10 +403,7 @@ button {
         padding: 0 6px;
       }
 
-      .field strong {
-        display: block;
-        margin-bottom: 2px;
-      }
+
     }
   </style>
 </head>
@@ -676,15 +681,15 @@ button {
 
   
 
-          <div class="field">
-            <strong>Valid</strong>
-            ${escapeHtml(formatKatfmValid(item))}
-          </div>
+<div class="field">
+  <strong>Valid</strong>
+  <span>${escapeHtml(formatKatfmValid(item))}</span>
+</div>
 
-          <div class="field">
-            <strong>Reason</strong>
-            ${escapeHtml(item.reason || "N/A")}
-          </div>
+<div class="field">
+  <strong>Reason</strong>
+  <span>${escapeHtml(item.reason || "N/A")}</span>
+</div>
 
           <div class="reg-box">${escapeHtml(item.regulation || item.rawText || "No regulation text")}</div>
         </div>
