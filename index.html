@@ -99,6 +99,34 @@
       line-height: 1.25;
     }
 
+.menu-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.menu-title-row .section-title {
+  margin: 0;
+}
+
+.btn-refresh {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 86px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  background: #10b981;
+  color: white;
+}
+
+.btn-refresh:hover {
+  background: #059669;
+}
+    
     .count-line {
       min-height: 22px;
       margin-bottom: 8px;
@@ -130,21 +158,21 @@
       gap: 6px;
     }
 
-    button {
-      appearance: none;
-      -webkit-appearance: none;
-      border: none;
-      border-radius: 10px;
-      background: var(--primary);
-      color: white;
-      font-size: 14px;
-      height: 34px;
-      padding: 0 10px;
-      cursor: pointer;
-      font-weight: 800;
-      min-width: 0;
-      flex: 1;
-    }
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-size: 14px;
+  height: 34px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-weight: 800;
+  min-width: 0;
+  flex: 1;
+}
 
     button:hover {
       background: var(--primary-dark);
@@ -174,6 +202,10 @@
       margin-top: 12px;
     }
 
+    .btn-placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}
     .notice {
       background: var(--empty-bg);
       border: 1px solid var(--border);
@@ -376,7 +408,10 @@
     </div>
 
     <div class="menu-card">
-      <div class="section-title">조회 메뉴</div>
+   <div class="menu-title-row">
+  <div class="section-title">조회 메뉴</div>
+  <button class="btn-refresh" onclick="loadAllAtfm()">전체조회</button>
+</div>
 
       <div class="menu-grid">
 <div class="menu-row">
@@ -384,9 +419,10 @@
   <div class="count-line">
     <span id="count-ICN_FIR" class="count-pill">0</span>
   </div>
-  <div class="button-row">
-    <button onclick="loadAtfm('ICN_FIR')">조회</button>
-  </div>
+<div class="button-row fir-button-row">
+  <button onclick="loadAtfm('ICN_FIR')">조회</button>
+  <button class="btn-placeholder" disabled></button>
+</div>
 </div>
 
 <div class="menu-row">
@@ -635,15 +671,7 @@
             </div>
           </div>
 
-          <div class="field">
-            <strong>방향</strong>
-            ${escapeHtml(item.label || item.dirString || "")}
-          </div>
-
-          <div class="field">
-            <strong>Published</strong>
-            ${escapeHtml(formatKatfmTime(item.publishedTime))}
-          </div>
+  
 
           <div class="field">
             <strong>Valid</strong>
