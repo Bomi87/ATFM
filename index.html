@@ -96,6 +96,27 @@
       font-weight: 700;
       margin-bottom: 10px;
       font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .count-badge {
+      display: inline-block;
+      min-width: 26px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .count-badge.active {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .button-row {
@@ -337,14 +358,18 @@
 
       <div class="menu-grid">
         <div class="menu-row">
-          <div class="menu-name">인천 FIR</div>
+          <div class="menu-name">
+            인천 FIR <span id="count-ICN_FIR" class="count-badge">-</span>
+          </div>
           <div class="button-row">
             <button onclick="loadAtfm('ICN_FIR')">조회</button>
           </div>
         </div>
 
         <div class="menu-row">
-          <div class="menu-name">중국/유럽 방향</div>
+          <div class="menu-name">
+            중국/유럽 방향 <span id="count-CHINA_EUROPE" class="count-badge">-</span>
+          </div>
           <div class="button-row">
             <button onclick="loadAtfm('CHINA_EUROPE_IN')">IN</button>
             <button onclick="loadAtfm('CHINA_EUROPE_OUT')">OUT</button>
@@ -352,7 +377,9 @@
         </div>
 
         <div class="menu-row">
-          <div class="menu-name">중국/동남아 방향</div>
+          <div class="menu-name">
+            중국/동남아 방향 <span id="count-CHINA_SEA" class="count-badge">-</span>
+          </div>
           <div class="button-row">
             <button onclick="loadAtfm('CHINA_SEA_IN')">IN</button>
             <button onclick="loadAtfm('CHINA_SEA_OUT')">OUT</button>
@@ -360,7 +387,9 @@
         </div>
 
         <div class="menu-row">
-          <div class="menu-name">일본/미주 방향</div>
+          <div class="menu-name">
+            일본/미주 방향 <span id="count-JAPAN_US" class="count-badge">-</span>
+          </div>
           <div class="button-row">
             <button onclick="loadAtfm('JAPAN_US_IN')">IN</button>
             <button onclick="loadAtfm('JAPAN_US_OUT')">OUT</button>
@@ -381,7 +410,7 @@
 
     <div id="result" class="result">
       <div class="notice">
-        메뉴를 선택하면 K-ATFM Regulation 정보가 표시됩니다.
+        접속 후 자동으로 전체 조회가 실행됩니다.
       </div>
     </div>
 
@@ -408,6 +437,14 @@
     };
 
     let isLoading = false;
+
+    /****************************************************
+     * 최초 자동 조회
+     ****************************************************/
+
+    window.addEventListener("DOMContentLoaded", function () {
+      loadAllAtfm();
+    });
 
     /****************************************************
      * 단일 메뉴 조회
@@ -520,6 +557,8 @@
     }
 
     function renderAllResult(data) {
+      updateMenuCounts(data.groups || []);
+
       const result = document.getElementById("result");
       const groups = data.groups || [];
 
@@ -592,12 +631,12 @@
 
           <div class="field">
             <strong>Published</strong>
-            ${escapeHtml(item.publishedTime || "N/A")}
+            ${escapeHtml(formatKatfmTime(item.publishedTime))}
           </div>
 
           <div class="field">
             <strong>Valid</strong>
-            ${escapeHtml(item.validText || "N/A")}
+            ${escapeHtml(formatKatfmValid(item))}
           </div>
 
           <div class="field">
@@ -605,19 +644,55 @@
             ${escapeHtml(item.reason || "N/A")}
           </div>
 
-          <div class="field">
-            <strong>Fix</strong>
-            ${escapeHtml(cleanNone(item.fix))}
-          </div>
-
-          <div class="field">
-            <strong>Airway</strong>
-            ${escapeHtml(cleanNone(item.airway))}
-          </div>
-
           <div class="reg-box">${escapeHtml(item.regulation || item.rawText || "No regulation text")}</div>
         </div>
       `;
+    }
+
+    /****************************************************
+     * Count Badge
+     ****************************************************/
+
+    function updateMenuCounts(groups) {
+      const counts = {
+        ICN_FIR: 0,
+        CHINA_EUROPE: 0,
+        CHINA_SEA: 0,
+        JAPAN_US: 0
+      };
+
+      groups.forEach(group => {
+        const key = group.key;
+        const count = group.count || 0;
+
+        if (key === "ICN_FIR") {
+          counts.ICN_FIR += count;
+        } else if (key === "CHINA_EUROPE_IN" || key === "CHINA_EUROPE_OUT") {
+          counts.CHINA_EUROPE += count;
+        } else if (key === "CHINA_SEA_IN" || key === "CHINA_SEA_OUT") {
+          counts.CHINA_SEA += count;
+        } else if (key === "JAPAN_US_IN" || key === "JAPAN_US_OUT") {
+          counts.JAPAN_US += count;
+        }
+      });
+
+      setCountBadge("count-ICN_FIR", counts.ICN_FIR);
+      setCountBadge("count-CHINA_EUROPE", counts.CHINA_EUROPE);
+      setCountBadge("count-CHINA_SEA", counts.CHINA_SEA);
+      setCountBadge("count-JAPAN_US", counts.JAPAN_US);
+    }
+
+    function setCountBadge(id, count) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      el.textContent = count;
+
+      if (count > 0) {
+        el.classList.add("active");
+      } else {
+        el.classList.remove("active");
+      }
     }
 
     /****************************************************
@@ -675,6 +750,59 @@
     }
 
     /****************************************************
+     * Time Format
+     ****************************************************/
+
+    function formatKatfmTime(value) {
+      if (!value) return "N/A";
+
+      const text = String(value).trim();
+
+      if (text.toUpperCase() === "UFN") return "UFN";
+
+      // K-ATFM format: MM-DD-YY HH:mm
+      // Example: 06-07-26 00:26 -> 07JUN,2026 00:26Z
+      const m = text.match(/^(\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})$/);
+      if (!m) return text;
+
+      const mm = m[1];
+      const dd = m[2];
+      const yy = m[3];
+      const hh = m[4];
+      const min = m[5];
+
+      const monthMap = {
+        "01": "JAN",
+        "02": "FEB",
+        "03": "MAR",
+        "04": "APR",
+        "05": "MAY",
+        "06": "JUN",
+        "07": "JUL",
+        "08": "AUG",
+        "09": "SEP",
+        "10": "OCT",
+        "11": "NOV",
+        "12": "DEC"
+      };
+
+      const year = Number(yy) >= 70 ? "19" + yy : "20" + yy;
+      const mon = monthMap[mm] || mm;
+
+      return `${dd}${mon},${year} ${hh}:${min}Z`;
+    }
+
+    function formatKatfmValid(item) {
+      const from = formatKatfmTime(item.validFrom);
+      const until = formatKatfmTime(item.validUntil);
+
+      if (from === "N/A" && until === "N/A") return "N/A";
+      if (until === "N/A") return from;
+
+      return `${from} ~ ${until}`;
+    }
+
+    /****************************************************
      * Utils
      ****************************************************/
 
@@ -685,11 +813,6 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-    }
-
-    function cleanNone(value) {
-      if (!value || value === "NONE") return "N/A";
-      return value;
     }
 
     function getNowText() {
