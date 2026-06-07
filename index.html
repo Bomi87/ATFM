@@ -17,8 +17,6 @@
       --warning-bg: #fff7ed;
       --warning-border: #fb923c;
       --empty-bg: #f9fafb;
-      --danger: #dc2626;
-      --success: #16a34a;
     }
 
     * {
@@ -41,16 +39,16 @@
     .app {
       max-width: 960px;
       margin: 0 auto;
-      padding: 18px;
+      padding: 14px;
     }
 
     .header {
       background: linear-gradient(135deg, #1e3a8a, #2563eb);
       color: white;
-      padding: 22px 18px;
+      padding: 18px 16px;
       border-radius: 18px;
       box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .header h1 {
@@ -63,65 +61,73 @@
       margin: 8px 0 0;
       font-size: 14px;
       opacity: 0.9;
+      line-height: 1.35;
     }
 
     .menu-card {
       background: var(--card);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 18px;
+      padding: 14px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 10px;
+      font-size: 17px;
+      font-weight: 800;
+      margin: 0 0 12px;
     }
 
     .menu-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
 
     .menu-row {
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 12px;
+      padding: 10px;
       background: #fff;
+      min-height: 118px;
     }
 
     .menu-name {
-      font-weight: 700;
-      margin-bottom: 10px;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
+      font-weight: 800;
+      margin-bottom: 6px;
+      font-size: 14px;
+      line-height: 1.25;
     }
 
-    .count-badge {
+    .count-line {
+      min-height: 22px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .count-pill {
       display: inline-block;
-      min-width: 26px;
-      padding: 3px 8px;
+      padding: 2px 6px;
       border-radius: 999px;
       background: #e5e7eb;
       color: #111827;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
-      text-align: center;
+      margin-right: 3px;
+      margin-bottom: 2px;
     }
 
-    .count-badge.active {
+    .count-pill.active {
       background: #fee2e2;
       color: #991b1b;
     }
 
     .button-row {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
 
     button {
@@ -131,12 +137,13 @@
       border-radius: 10px;
       background: var(--primary);
       color: white;
-      font-size: 16px;
-      height: 42px;
-      padding: 0 14px;
+      font-size: 14px;
+      height: 34px;
+      padding: 0 10px;
       cursor: pointer;
-      font-weight: 700;
-      min-width: 78px;
+      font-weight: 800;
+      min-width: 0;
+      flex: 1;
     }
 
     button:hover {
@@ -148,49 +155,33 @@
       cursor: not-allowed;
     }
 
-    .btn-secondary {
-      background: #374151;
-    }
-
-    .btn-secondary:hover {
-      background: #111827;
-    }
-
-    .btn-light {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .btn-light:hover {
-      background: #d1d5db;
-    }
-
     .status {
       background: var(--card);
       border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       border: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
 
     .result {
-      margin-top: 14px;
+      margin-top: 12px;
     }
 
     .notice {
       background: var(--empty-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 18px;
+      padding: 15px;
       color: var(--muted);
       line-height: 1.5;
+      font-size: 14px;
     }
 
     .notice.warning {
@@ -206,8 +197,8 @@
     }
 
     .group-title {
-      margin: 18px 0 10px;
-      font-size: 18px;
+      margin: 16px 0 8px;
+      font-size: 17px;
       font-weight: 800;
     }
 
@@ -215,35 +206,36 @@
       background: #eff6ff;
       border: 1px solid #bfdbfe;
       border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      font-size: 14px;
+      padding: 11px 13px;
+      margin-bottom: 10px;
+      font-size: 13px;
       color: #1e40af;
+      line-height: 1.45;
     }
 
     .item-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
     }
 
     .item-head {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
     .badge {
       display: inline-block;
       border-radius: 999px;
-      padding: 5px 10px;
-      font-size: 12px;
+      padding: 4px 9px;
+      font-size: 11px;
       font-weight: 800;
       background: #dbeafe;
       color: #1e40af;
@@ -260,14 +252,14 @@
     }
 
     .field {
-      margin: 7px 0;
+      margin: 6px 0;
       line-height: 1.45;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .field strong {
       display: inline-block;
-      min-width: 92px;
+      min-width: 82px;
       color: #374151;
     }
 
@@ -276,10 +268,10 @@
       background: #f9fafb;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 12px;
-      margin-top: 10px;
+      padding: 11px;
+      margin-top: 9px;
       font-family: Consolas, "Courier New", monospace;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 1.45;
       overflow-x: auto;
     }
@@ -287,14 +279,14 @@
     .footer {
       text-align: center;
       color: var(--muted);
-      font-size: 12px;
-      padding: 18px 0 8px;
+      font-size: 11px;
+      padding: 16px 0 8px;
     }
 
     .loading {
       display: inline-block;
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       border: 2px solid #d1d5db;
       border-top: 2px solid var(--primary);
       border-radius: 50%;
@@ -310,12 +302,16 @@
     }
 
     @media (min-width: 720px) {
-      .menu-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .header h1 {
         font-size: 28px;
+      }
+
+      .menu-row {
+        min-height: 128px;
+      }
+
+      button {
+        height: 36px;
       }
     }
 
@@ -329,13 +325,39 @@
       }
 
       .header h1 {
-        font-size: 22px;
+        font-size: 23px;
+      }
+
+      .header p {
+        font-size: 13px;
+      }
+
+      .menu-card {
+        padding: 13px;
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+      }
+
+      .menu-row {
+        padding: 9px;
+        min-height: 112px;
+      }
+
+      .menu-name {
+        font-size: 13px;
+      }
+
+      .count-line {
+        font-size: 11px;
       }
 
       button {
-        flex: 1;
-        font-size: 16px;
-        height: 42px;
+        height: 32px;
+        font-size: 13px;
+        padding: 0 6px;
       }
 
       .field strong {
@@ -358,8 +380,9 @@
 
       <div class="menu-grid">
         <div class="menu-row">
-          <div class="menu-name">
-            인천 FIR <span id="count-ICN_FIR" class="count-badge">-</span>
+          <div class="menu-name">인천 FIR</div>
+          <div class="count-line">
+            <span id="count-ICN_FIR" class="count-pill">0</span>
           </div>
           <div class="button-row">
             <button onclick="loadAtfm('ICN_FIR')">조회</button>
@@ -367,8 +390,10 @@
         </div>
 
         <div class="menu-row">
-          <div class="menu-name">
-            중국/유럽 방향 <span id="count-CHINA_EUROPE" class="count-badge">-</span>
+          <div class="menu-name">중국/유럽 방향</div>
+          <div class="count-line">
+            <span id="count-CHINA_EUROPE_IN" class="count-pill">IN: 0</span>
+            <span id="count-CHINA_EUROPE_OUT" class="count-pill">OUT: 0</span>
           </div>
           <div class="button-row">
             <button onclick="loadAtfm('CHINA_EUROPE_IN')">IN</button>
@@ -377,8 +402,10 @@
         </div>
 
         <div class="menu-row">
-          <div class="menu-name">
-            중국/동남아 방향 <span id="count-CHINA_SEA" class="count-badge">-</span>
+          <div class="menu-name">중국/동남아 방향</div>
+          <div class="count-line">
+            <span id="count-CHINA_SEA_IN" class="count-pill">IN: 0</span>
+            <span id="count-CHINA_SEA_OUT" class="count-pill">OUT: 0</span>
           </div>
           <div class="button-row">
             <button onclick="loadAtfm('CHINA_SEA_IN')">IN</button>
@@ -387,19 +414,16 @@
         </div>
 
         <div class="menu-row">
-          <div class="menu-name">
-            일본/미주 방향 <span id="count-JAPAN_US" class="count-badge">-</span>
+          <div class="menu-name">일본/미주 방향</div>
+          <div class="count-line">
+            <span id="count-JAPAN_US_IN" class="count-pill">IN: 0</span>
+            <span id="count-JAPAN_US_OUT" class="count-pill">OUT: 0</span>
           </div>
           <div class="button-row">
             <button onclick="loadAtfm('JAPAN_US_IN')">IN</button>
             <button onclick="loadAtfm('JAPAN_US_OUT')">OUT</button>
           </div>
         </div>
-      </div>
-
-      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn-secondary" onclick="loadAllAtfm()">전체 조회</button>
-        <button class="btn-light" onclick="clearResult()">화면 지우기</button>
       </div>
     </div>
 
@@ -453,11 +477,6 @@
     async function loadAtfm(key) {
       if (isLoading) return;
 
-      if (!GAS_URL || GAS_URL.includes("여기에_Apps_Script_배포_URL")) {
-        showError("Apps Script 배포 URL을 먼저 입력해주세요.");
-        return;
-      }
-
       setLoading(true, `${LABEL_MAP[key] || key} 조회 중...`);
 
       try {
@@ -479,16 +498,11 @@
     }
 
     /****************************************************
-     * 전체 조회
+     * 전체 자동 조회
      ****************************************************/
 
     async function loadAllAtfm() {
       if (isLoading) return;
-
-      if (!GAS_URL || GAS_URL.includes("여기에_Apps_Script_배포_URL")) {
-        showError("Apps Script 배포 URL을 먼저 입력해주세요.");
-        return;
-      }
 
       setLoading(true, "전체 조회 중...");
 
@@ -561,8 +575,7 @@
 
       const result = document.getElementById("result");
       const groups = data.groups || [];
-
-      let totalItems = groups.reduce((sum, g) => sum + (g.count || 0), 0);
+      const totalItems = groups.reduce((sum, g) => sum + (g.count || 0), 0);
 
       let html = `
         <div class="group-title">전체 조회 결과</div>
@@ -573,9 +586,7 @@
       `;
 
       groups.forEach(group => {
-        html += `
-          <div class="group-title">${escapeHtml(group.label)}</div>
-        `;
+        html += `<div class="group-title">${escapeHtml(group.label)}</div>`;
 
         if (!group.success) {
           html += `
@@ -656,37 +667,51 @@
     function updateMenuCounts(groups) {
       const counts = {
         ICN_FIR: 0,
-        CHINA_EUROPE: 0,
-        CHINA_SEA: 0,
-        JAPAN_US: 0
+        CHINA_EUROPE_IN: 0,
+        CHINA_EUROPE_OUT: 0,
+        CHINA_SEA_IN: 0,
+        CHINA_SEA_OUT: 0,
+        JAPAN_US_IN: 0,
+        JAPAN_US_OUT: 0
       };
 
       groups.forEach(group => {
-        const key = group.key;
-        const count = group.count || 0;
-
-        if (key === "ICN_FIR") {
-          counts.ICN_FIR += count;
-        } else if (key === "CHINA_EUROPE_IN" || key === "CHINA_EUROPE_OUT") {
-          counts.CHINA_EUROPE += count;
-        } else if (key === "CHINA_SEA_IN" || key === "CHINA_SEA_OUT") {
-          counts.CHINA_SEA += count;
-        } else if (key === "JAPAN_US_IN" || key === "JAPAN_US_OUT") {
-          counts.JAPAN_US += count;
+        if (!group || !group.key) return;
+        if (counts[group.key] !== undefined) {
+          counts[group.key] = group.count || 0;
         }
       });
 
-      setCountBadge("count-ICN_FIR", counts.ICN_FIR);
-      setCountBadge("count-CHINA_EUROPE", counts.CHINA_EUROPE);
-      setCountBadge("count-CHINA_SEA", counts.CHINA_SEA);
-      setCountBadge("count-JAPAN_US", counts.JAPAN_US);
+      setSingleCount("count-ICN_FIR", counts.ICN_FIR);
+
+      setDirectionCount("count-CHINA_EUROPE_IN", "IN", counts.CHINA_EUROPE_IN);
+      setDirectionCount("count-CHINA_EUROPE_OUT", "OUT", counts.CHINA_EUROPE_OUT);
+
+      setDirectionCount("count-CHINA_SEA_IN", "IN", counts.CHINA_SEA_IN);
+      setDirectionCount("count-CHINA_SEA_OUT", "OUT", counts.CHINA_SEA_OUT);
+
+      setDirectionCount("count-JAPAN_US_IN", "IN", counts.JAPAN_US_IN);
+      setDirectionCount("count-JAPAN_US_OUT", "OUT", counts.JAPAN_US_OUT);
     }
 
-    function setCountBadge(id, count) {
+    function setSingleCount(id, count) {
       const el = document.getElementById(id);
       if (!el) return;
 
       el.textContent = count;
+
+      if (count > 0) {
+        el.classList.add("active");
+      } else {
+        el.classList.remove("active");
+      }
+    }
+
+    function setDirectionCount(id, label, count) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      el.textContent = `${label}: ${count}`;
 
       if (count > 0) {
         el.classList.add("active");
@@ -723,16 +748,6 @@
       setStatus("오류 발생");
     }
 
-    function clearResult() {
-      document.getElementById("result").innerHTML = `
-        <div class="notice">
-          메뉴를 선택하면 K-ATFM Regulation 정보가 표시됩니다.
-        </div>
-      `;
-      setStatus("대기 중");
-      document.getElementById("timeText").textContent = "";
-    }
-
     function setLoading(loading, message) {
       isLoading = loading;
 
@@ -760,8 +775,6 @@
 
       if (text.toUpperCase() === "UFN") return "UFN";
 
-      // K-ATFM format: MM-DD-YY HH:mm
-      // Example: 06-07-26 00:26 -> 07JUN,2026 00:26Z
       const m = text.match(/^(\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})$/);
       if (!m) return text;
 
