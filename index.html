@@ -409,7 +409,24 @@ button {
 </head>
 
 <body>
-  <div class="app">
+<body>
+  <div id="authScreen" style="
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:#f4f7fb;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR',Arial,sans-serif;
+    color:#1f2937;
+    font-size:15px;
+    font-weight:700;
+  ">
+    승인 확인 중...
+  </div>
+
+  <div id="appRoot" style="display:none;">
+    <div class="app">
     <div class="header">
       <h1>K-ATFM 흐름관리</h1>
       <p>인천 FIR / 중국·유럽 / 중국·동남아 / 일본·미주 방향 ATFM Regulation 조회</p>
@@ -485,6 +502,7 @@ button {
     <div class="footer">
       Source: K-ATFM / Google Apps Script Proxy
     </div>
+    </div>
   </div>
 
   <script>
@@ -504,15 +522,43 @@ button {
       JAPAN_US_OUT: "일본/미주 방향 OUT"
     };
 
-    let isLoading = false;
+let isLoading = false;
+let KATFM_APP_STARTED = false;
 
-    /****************************************************
-     * 최초 자동 조회
-     ****************************************************/
+/****************************************************
+ * AUTH / INIT
+ ****************************************************/
 
-    window.addEventListener("DOMContentLoaded", function () {
-      loadAllAtfm();
-    });
+function showAuthorizedApp() {
+  const authScreen = document.getElementById("authScreen");
+  const appRoot = document.getElementById("appRoot");
+
+  if (authScreen) authScreen.style.display = "none";
+  if (appRoot) appRoot.style.display = "block";
+}
+
+function startKatfmAppAfterAuth() {
+  if (KATFM_APP_STARTED) return;
+
+  KATFM_APP_STARTED = true;
+  showAuthorizedApp();
+  loadAllAtfm();
+}
+
+(function waitForPortalAuth() {
+  if (sessionStorage.getItem("portalApproved") === "true") {
+    startKatfmAppAfterAuth();
+    return;
+  }
+
+  if (window.CURRENT_PORTAL_USER) {
+    sessionStorage.setItem("portalApproved", "true");
+    startKatfmAppAfterAuth();
+    return;
+  }
+
+  setTimeout(waitForPortalAuth, 200);
+})();
 
     /****************************************************
      * 단일 메뉴 조회
@@ -1013,5 +1059,8 @@ function setDirectionCount(id, label, count) {
       }
     }
   </script>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://bomi87.github.io/SK-Aviation-portal/common-auth.js"></script>
 </body>
 </html>
