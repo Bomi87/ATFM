@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>K-ATFM 흐름관리</title>
+
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --warning-bg: #fff7ed;
+      --warning-border: #fb923c;
+      --empty-bg: #f9fafb;
+      --danger: #dc2626;
+      --success: #16a34a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 22px 18px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+      margin-bottom: 18px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .menu-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .menu-row {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .menu-name {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      height: 42px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-weight: 700;
+      min-width: 78px;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #111827;
+    }
+
+    .btn-light {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-light:hover {
+      background: #d1d5db;
+    }
+
+    .status {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .result {
+      margin-top: 14px;
+    }
+
+    .notice {
+      background: var(--empty-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .notice.warning {
+      background: var(--warning-bg);
+      border-color: var(--warning-border);
+      color: #9a3412;
+    }
+
+    .notice.error {
+      background: #fef2f2;
+      border-color: #fca5a5;
+      color: #991b1b;
+    }
+
+    .group-title {
+      margin: 18px 0 10px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .summary {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #1e40af;
+    }
+
+    .item-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge.ctot {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge.ufn {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .field {
+      margin: 7px 0;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .field strong {
+      display: inline-block;
+      min-width: 92px;
+      color: #374151;
+    }
+
+    .reg-box {
+      white-space: pre-wrap;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 18px 0 8px;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #d1d5db;
+      border-top: 2px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: -2px;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 12px;
+      }
+
+      .header {
+        padding: 18px 15px;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      button {
+        flex: 1;
+        font-size: 16px;
+        height: 42px;
+      }
+
+      .field strong {
+        display: block;
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>K-ATFM 흐름관리</h1>
+      <p>인천 FIR / 중국·유럽 / 중국·동남아 / 일본·미주 방향 ATFM Regulation 조회</p>
+    </div>
+
+    <div class="menu-card">
+      <div class="section-title">조회 메뉴</div>
+
+      <div class="menu-grid">
+        <div class="menu-row">
+          <div class="menu-name">인천 FIR</div>
+          <div class="button-row">
+            <button onclick="loadAtfm('ICN_FIR')">조회</button>
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <div class="menu-name">중국/유럽 방향</div>
+          <div class="button-row">
+            <button onclick="loadAtfm('CHINA_EUROPE_IN')">IN</button>
+            <button onclick="loadAtfm('CHINA_EUROPE_OUT')">OUT</button>
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <div class="menu-name">중국/동남아 방향</div>
+          <div class="button-row">
+            <button onclick="loadAtfm('CHINA_SEA_IN')">IN</button>
+            <button onclick="loadAtfm('CHINA_SEA_OUT')">OUT</button>
+          </div>
+        </div>
+
+        <div class="menu-row">
+          <div class="menu-name">일본/미주 방향</div>
+          <div class="button-row">
+            <button onclick="loadAtfm('JAPAN_US_IN')">IN</button>
+            <button onclick="loadAtfm('JAPAN_US_OUT')">OUT</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn-secondary" onclick="loadAllAtfm()">전체 조회</button>
+        <button class="btn-light" onclick="clearResult()">화면 지우기</button>
+      </div>
+    </div>
+
+    <div class="status">
+      <div id="statusText">대기 중</div>
+      <div id="timeText"></div>
+    </div>
+
+    <div id="result" class="result">
+      <div class="notice">
+        메뉴를 선택하면 K-ATFM Regulation 정보가 표시됩니다.
+      </div>
+    </div>
+
+    <div class="footer">
+      Source: K-ATFM / Google Apps Script Proxy
+    </div>
+  </div>
+
+  <script>
+    /****************************************************
+     * 설정
+     ****************************************************/
+
+    const GAS_URL = "여기에_Apps_Script_배포_URL";
+
+    const LABEL_MAP = {
+      ICN_FIR: "인천 FIR",
+      CHINA_EUROPE_IN: "중국/유럽 방향 IN",
+      CHINA_EUROPE_OUT: "중국/유럽 방향 OUT",
+      CHINA_SEA_IN: "중국/동남아 방향 IN",
+      CHINA_SEA_OUT: "중국/동남아 방향 OUT",
+      JAPAN_US_IN: "일본/미주 방향 IN",
+      JAPAN_US_OUT: "일본/미주 방향 OUT"
+    };
+
+    let isLoading = false;
+
+    /****************************************************
+     * 단일 메뉴 조회
+     ****************************************************/
+
+    async function loadAtfm(key) {
+      if (isLoading) return;
+
+      if (!GAS_URL || GAS_URL.includes("여기에_Apps_Script_배포_URL")) {
+        showError("Apps Script 배포 URL을 먼저 입력해주세요.");
+        return;
+      }
+
+      setLoading(true, `${LABEL_MAP[key] || key} 조회 중...`);
+
+      try {
+        const url = `${GAS_URL}?action=get&key=${encodeURIComponent(key)}&_=${Date.now()}`;
+        const data = await fetchJson(url);
+
+        if (!data.success) {
+          handleApiError(data);
+          return;
+        }
+
+        renderSingleResult(data);
+
+      } catch (err) {
+        showError("조회 중 오류가 발생했습니다.<br>" + escapeHtml(err.message));
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    /****************************************************
+     * 전체 조회
+     ****************************************************/
+
+    async function loadAllAtfm() {
+      if (isLoading) return;
+
+      if (!GAS_URL || GAS_URL.includes("여기에_Apps_Script_배포_URL")) {
+        showError("Apps Script 배포 URL을 먼저 입력해주세요.");
+        return;
+      }
+
+      setLoading(true, "전체 조회 중...");
+
+      try {
+        const url = `${GAS_URL}?action=all&_=${Date.now()}`;
+        const data = await fetchJson(url);
+
+        if (!data.success) {
+          handleApiError(data);
+          return;
+        }
+
+        renderAllResult(data);
+
+      } catch (err) {
+        showError("전체 조회 중 오류가 발생했습니다.<br>" + escapeHtml(err.message));
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    /****************************************************
+     * Fetch
+     ****************************************************/
+
+    async function fetchJson(url) {
+      const response = await fetch(url, {
+        method: "GET",
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      return await response.json();
+    }
+
+    /****************************************************
+     * Render
+     ****************************************************/
+
+    function renderSingleResult(data) {
+      const result = document.getElementById("result");
+
+      let html = `
+        <div class="group-title">${escapeHtml(data.label)}</div>
+        <div class="summary">
+          총 ${data.count || 0}건
+          ${data.updatedAt ? `<br>조회시각: ${formatDateTime(data.updatedAt)}` : ""}
+        </div>
+      `;
+
+      if (!data.items || data.items.length === 0) {
+        html += `
+          <div class="notice">
+            현재 표시할 ATFM Regulation이 없습니다.
+          </div>
+        `;
+      } else {
+        html += data.items.map(renderItemCard).join("");
+      }
+
+      result.innerHTML = html;
+      setStatus(`${data.label} 조회 완료 / ${data.count || 0}건`);
+    }
+
+    function renderAllResult(data) {
+      const result = document.getElementById("result");
+      const groups = data.groups || [];
+
+      let totalItems = groups.reduce((sum, g) => sum + (g.count || 0), 0);
+
+      let html = `
+        <div class="group-title">전체 조회 결과</div>
+        <div class="summary">
+          전체 ${groups.length}개 메뉴 / Regulation ${totalItems}건
+          ${data.updatedAt ? `<br>조회시각: ${formatDateTime(data.updatedAt)}` : ""}
+        </div>
+      `;
+
+      groups.forEach(group => {
+        html += `
+          <div class="group-title">${escapeHtml(group.label)}</div>
+        `;
+
+        if (!group.success) {
+          html += `
+            <div class="notice error">
+              조회 실패: ${escapeHtml(group.message || "Unknown error")}
+            </div>
+          `;
+          return;
+        }
+
+        if (!group.items || group.items.length === 0) {
+          html += `
+            <div class="notice">
+              현재 표시할 ATFM Regulation이 없습니다.
+            </div>
+          `;
+          return;
+        }
+
+        html += group.items.map(renderItemCard).join("");
+      });
+
+      result.innerHTML = html;
+      setStatus(`전체 조회 완료 / Regulation ${totalItems}건`);
+    }
+
+    function renderItemCard(item) {
+      const ctotBadge = item.ctotIssued
+        ? `<span class="badge ctot">CTOT</span>`
+        : "";
+
+      const ufnBadge = item.isUfn
+        ? `<span class="badge ufn">UFN</span>`
+        : "";
+
+      return `
+        <div class="item-card">
+          <div class="item-head">
+            <div>
+              <span class="badge">${escapeHtml(item.status || "ATFM")}</span>
+              ${ctotBadge}
+              ${ufnBadge}
+            </div>
+            <div style="font-size:13px;color:#6b7280;">
+              #${item.no || ""}
+            </div>
+          </div>
+
+          <div class="field">
+            <strong>방향</strong>
+            ${escapeHtml(item.label || item.dirString || "")}
+          </div>
+
+          <div class="field">
+            <strong>Published</strong>
+            ${escapeHtml(item.publishedTime || "N/A")}
+          </div>
+
+          <div class="field">
+            <strong>Valid</strong>
+            ${escapeHtml(item.validText || "N/A")}
+          </div>
+
+          <div class="field">
+            <strong>Reason</strong>
+            ${escapeHtml(item.reason || "N/A")}
+          </div>
+
+          <div class="field">
+            <strong>Fix</strong>
+            ${escapeHtml(cleanNone(item.fix))}
+          </div>
+
+          <div class="field">
+            <strong>Airway</strong>
+            ${escapeHtml(cleanNone(item.airway))}
+          </div>
+
+          <div class="reg-box">${escapeHtml(item.regulation || item.rawText || "No regulation text")}</div>
+        </div>
+      `;
+    }
+
+    /****************************************************
+     * Error / Status
+     ****************************************************/
+
+    function handleApiError(data) {
+      if (data.errorType === "LOCK_TIMEOUT") {
+        document.getElementById("result").innerHTML = `
+          <div class="notice warning">
+            현재 다른 사용자가 조회 중입니다.<br>
+            잠시 후 다시 조회해주세요.
+          </div>
+        `;
+        setStatus("다른 사용자 조회 중");
+        return;
+      }
+
+      showError(data.message || "조회 실패");
+    }
+
+    function showError(message) {
+      document.getElementById("result").innerHTML = `
+        <div class="notice error">
+          ${message}
+        </div>
+      `;
+      setStatus("오류 발생");
+    }
+
+    function clearResult() {
+      document.getElementById("result").innerHTML = `
+        <div class="notice">
+          메뉴를 선택하면 K-ATFM Regulation 정보가 표시됩니다.
+        </div>
+      `;
+      setStatus("대기 중");
+      document.getElementById("timeText").textContent = "";
+    }
+
+    function setLoading(loading, message) {
+      isLoading = loading;
+
+      const buttons = document.querySelectorAll("button");
+      buttons.forEach(btn => btn.disabled = loading);
+
+      if (loading) {
+        setStatus(`<span class="loading"></span>${message || "조회 중..."}`);
+      }
+    }
+
+    function setStatus(message) {
+      document.getElementById("statusText").innerHTML = message;
+      document.getElementById("timeText").textContent = getNowText();
+    }
+
+    /****************************************************
+     * Utils
+     ****************************************************/
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function cleanNone(value) {
+      if (!value || value === "NONE") return "N/A";
+      return value;
+    }
+
+    function getNowText() {
+      const d = new Date();
+      return d.toLocaleString("ko-KR", {
+        hour12: false,
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function formatDateTime(value) {
+      try {
+        const d = new Date(value);
+        return d.toLocaleString("ko-KR", {
+          hour12: false,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+      } catch (err) {
+        return value;
+      }
+    }
+  </script>
+</body>
+</html>
