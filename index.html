@@ -379,51 +379,51 @@
       <div class="section-title">조회 메뉴</div>
 
       <div class="menu-grid">
-        <div class="menu-row">
-          <div class="menu-name">인천 FIR</div>
-          <div class="count-line">
-            <span id="count-ICN_FIR" class="count-pill">0</span>
-          </div>
-          <div class="button-row">
-            <button onclick="loadAtfm('ICN_FIR')">조회</button>
-          </div>
-        </div>
+<div class="menu-row">
+  <div class="menu-name">인천 FIR</div>
+  <div class="count-line">
+    <span id="count-ICN_FIR" class="count-pill">0</span>
+  </div>
+  <div class="button-row">
+    <button onclick="loadAtfm('ICN_FIR')">조회</button>
+  </div>
+</div>
 
-        <div class="menu-row">
-          <div class="menu-name">중국/유럽 방향</div>
-          <div class="count-line">
-            <span id="count-CHINA_EUROPE_IN" class="count-pill">IN: 0</span>
-            <span id="count-CHINA_EUROPE_OUT" class="count-pill">OUT: 0</span>
-          </div>
-          <div class="button-row">
-            <button onclick="loadAtfm('CHINA_EUROPE_IN')">IN</button>
-            <button onclick="loadAtfm('CHINA_EUROPE_OUT')">OUT</button>
-          </div>
-        </div>
+<div class="menu-row">
+  <div class="menu-name">중국/유럽 방향</div>
+  <div class="count-line">
+    <span id="count-CHINA_EUROPE_IN" class="count-pill">IN: 0</span>
+    <span id="count-CHINA_EUROPE_OUT" class="count-pill">OUT: 0</span>
+  </div>
+  <div class="button-row">
+    <button onclick="loadAtfm('CHINA_EUROPE_IN')">IN</button>
+    <button onclick="loadAtfm('CHINA_EUROPE_OUT')">OUT</button>
+  </div>
+</div>
 
-        <div class="menu-row">
-          <div class="menu-name">중국/동남아 방향</div>
-          <div class="count-line">
-            <span id="count-CHINA_SEA_IN" class="count-pill">IN: 0</span>
-            <span id="count-CHINA_SEA_OUT" class="count-pill">OUT: 0</span>
-          </div>
-          <div class="button-row">
-            <button onclick="loadAtfm('CHINA_SEA_IN')">IN</button>
-            <button onclick="loadAtfm('CHINA_SEA_OUT')">OUT</button>
-          </div>
-        </div>
+<div class="menu-row">
+  <div class="menu-name">중국/동남아 방향</div>
+  <div class="count-line">
+    <span id="count-CHINA_SEA_IN" class="count-pill">IN: 0</span>
+    <span id="count-CHINA_SEA_OUT" class="count-pill">OUT: 0</span>
+  </div>
+  <div class="button-row">
+    <button onclick="loadAtfm('CHINA_SEA_IN')">IN</button>
+    <button onclick="loadAtfm('CHINA_SEA_OUT')">OUT</button>
+  </div>
+</div>
 
-        <div class="menu-row">
-          <div class="menu-name">일본/미주 방향</div>
-          <div class="count-line">
-            <span id="count-JAPAN_US_IN" class="count-pill">IN: 0</span>
-            <span id="count-JAPAN_US_OUT" class="count-pill">OUT: 0</span>
-          </div>
-          <div class="button-row">
-            <button onclick="loadAtfm('JAPAN_US_IN')">IN</button>
-            <button onclick="loadAtfm('JAPAN_US_OUT')">OUT</button>
-          </div>
-        </div>
+<div class="menu-row">
+  <div class="menu-name">일본/미주 방향</div>
+  <div class="count-line">
+    <span id="count-JAPAN_US_IN" class="count-pill">IN: 0</span>
+    <span id="count-JAPAN_US_OUT" class="count-pill">OUT: 0</span>
+  </div>
+  <div class="button-row">
+    <button onclick="loadAtfm('JAPAN_US_IN')">IN</button>
+    <button onclick="loadAtfm('JAPAN_US_OUT')">OUT</button>
+  </div>
+</div>
       </div>
     </div>
 
@@ -664,61 +664,67 @@
      * Count Badge
      ****************************************************/
 
-    function updateMenuCounts(groups) {
-      const counts = {
-        ICN_FIR: 0,
-        CHINA_EUROPE_IN: 0,
-        CHINA_EUROPE_OUT: 0,
-        CHINA_SEA_IN: 0,
-        CHINA_SEA_OUT: 0,
-        JAPAN_US_IN: 0,
-        JAPAN_US_OUT: 0
-      };
+   function updateMenuCounts(groups) {
+  const counts = {
+    ICN_FIR: 0,
 
-      groups.forEach(group => {
-        if (!group || !group.key) return;
-        if (counts[group.key] !== undefined) {
-          counts[group.key] = group.count || 0;
-        }
-      });
+    CHINA_EUROPE_IN: 0,
+    CHINA_EUROPE_OUT: 0,
 
-      setSingleCount("count-ICN_FIR", counts.ICN_FIR);
+    CHINA_SEA_IN: 0,
+    CHINA_SEA_OUT: 0,
 
-      setDirectionCount("count-CHINA_EUROPE_IN", "IN", counts.CHINA_EUROPE_IN);
-      setDirectionCount("count-CHINA_EUROPE_OUT", "OUT", counts.CHINA_EUROPE_OUT);
+    JAPAN_US_IN: 0,
+    JAPAN_US_OUT: 0
+  };
 
-      setDirectionCount("count-CHINA_SEA_IN", "IN", counts.CHINA_SEA_IN);
-      setDirectionCount("count-CHINA_SEA_OUT", "OUT", counts.CHINA_SEA_OUT);
+  groups.forEach(group => {
+    if (!group || !group.key) return;
 
-      setDirectionCount("count-JAPAN_US_IN", "IN", counts.JAPAN_US_IN);
-      setDirectionCount("count-JAPAN_US_OUT", "OUT", counts.JAPAN_US_OUT);
+    if (counts[group.key] !== undefined) {
+      counts[group.key] = group.count || 0;
     }
+  });
 
-    function setSingleCount(id, count) {
-      const el = document.getElementById(id);
-      if (!el) return;
+  // 인천 FIR만 단일 숫자
+  setSingleCount("count-ICN_FIR", counts.ICN_FIR);
 
-      el.textContent = count;
+  // 나머지는 모두 IN / OUT 표시
+  setDirectionCount("count-CHINA_EUROPE_IN", "IN", counts.CHINA_EUROPE_IN);
+  setDirectionCount("count-CHINA_EUROPE_OUT", "OUT", counts.CHINA_EUROPE_OUT);
 
-      if (count > 0) {
-        el.classList.add("active");
-      } else {
-        el.classList.remove("active");
-      }
-    }
+  setDirectionCount("count-CHINA_SEA_IN", "IN", counts.CHINA_SEA_IN);
+  setDirectionCount("count-CHINA_SEA_OUT", "OUT", counts.CHINA_SEA_OUT);
 
-    function setDirectionCount(id, label, count) {
-      const el = document.getElementById(id);
-      if (!el) return;
+  setDirectionCount("count-JAPAN_US_IN", "IN", counts.JAPAN_US_IN);
+  setDirectionCount("count-JAPAN_US_OUT", "OUT", counts.JAPAN_US_OUT);
+}
 
-      el.textContent = `${label}: ${count}`;
+function setSingleCount(id, count) {
+  const el = document.getElementById(id);
+  if (!el) return;
 
-      if (count > 0) {
-        el.classList.add("active");
-      } else {
-        el.classList.remove("active");
-      }
-    }
+  el.textContent = count;
+
+  if (count > 0) {
+    el.classList.add("active");
+  } else {
+    el.classList.remove("active");
+  }
+}
+
+function setDirectionCount(id, label, count) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.textContent = `${label}: ${count}`;
+
+  if (count > 0) {
+    el.classList.add("active");
+  } else {
+    el.classList.remove("active");
+  }
+}
 
     /****************************************************
      * Error / Status
