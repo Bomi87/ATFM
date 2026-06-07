@@ -607,7 +607,8 @@ button {
           </div>
         `;
       } else {
-        html += data.items.map(renderItemCard).join("");
+    const sortedItems = sortAtfmItems(data.items);
+html += sortedItems.map(renderItemCard).join("");
       }
 
       result.innerHTML = html;
@@ -650,7 +651,8 @@ button {
           return;
         }
 
-        html += group.items.map(renderItemCard).join("");
+       const sortedItems = sortAtfmItems(group.items);
+html += sortedItems.map(renderItemCard).join("");
       });
 
       result.innerHTML = html;
@@ -696,6 +698,119 @@ button {
       `;
     }
 
+/****************************************************
+ * ATFM Sort / Group
+ ****************************************************/
+
+function sortAtfmItems(items) {
+  if (!Array.isArray(items)) return [];
+
+  const enriched = items.map(item => {
+    return {
+      item: item,
+      groupKey: getAtfmGroupKey(item),
+      validTime: getAtfmValidTimeValue(item.validFrom)
+    };
+  });
+
+  // 그룹별 최신 validFrom 계산
+  const groupLatestMap = {};
+
+  enriched.forEach(row => {
+    const key = row.groupKey || "ZZZ_OTHER";
+    if (groupLatestMap[key] === undefined || row.validTime > groupLatestMap[key]) {
+      groupLatestMap[key] = row.validTime;
+    }
+  });
+
+  enriched.sort((a, b) => {
+    const aGroupLatest = groupLatestMap[a.groupKey] || 0;
+    const bGroupLatest = groupLatestMap[b.groupKey] || 0;
+
+    // 1순위: 그룹의 최신 Valid From이 최신인 그룹이 먼저
+    if (bGroupLatest !== aGroupLatest) {
+      return bGroupLatest - aGroupLatest;
+    }
+
+    // 2순위: 같은 그룹 안에서는 개별 Valid From 최신순
+    if (b.validTime !== a.validTime) {
+      return b.validTime - a.validTime;
+    }
+
+    // 3순위: 그룹명 알파벳순
+    return String(a.groupKey).localeCompare(String(b.groupKey));
+  });
+
+  return enriched.map(row => row.item);
+}
+
+function getAtfmGroupKey(item) {
+  const regulation = String(item.regulation || item.rawText || "")
+    .replace(/\r/g, "")
+    .trim();
+
+  if (!regulation) return "ZZZ_OTHER";
+
+  const lines = regulation
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  // Case 1: VIA MUGUS/ATOTI
+  for (const line of lines) {
+    const viaMatch = line.match(/^VIA\s+([A-Z0-9/,\-\s]+)/i);
+    if (viaMatch) {
+      return "VIA " + normalizeGroupText(viaMatch[1]);
+    }
+  }
+
+  // Case 2: 1. BOUND FOR RCTP MULTI NODAL...
+  // Case 3: 1. BOUND FOR VHHH MULTI NODAL...
+  // Case 4: 1. BOUND FOR MUGUS/ATOTI N892...
+  for (const line of lines) {
+    const boundMatch = line.match(/BOUND\s+FOR\s+([A-Z0-9/*_\-]+)/i);
+    if (boundMatch) {
+      const target = boundMatch[1].trim();
+
+      // "*"는 공통/일반 조건이므로 그룹 기준으로 쓰지 않음
+      if (target && target !== "*") {
+        return "BOUND FOR " + normalizeGroupText(target);
+      }
+    }
+  }
+
+  return "ZZZ_OTHER";
+}
+
+function normalizeGroupText(value) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .replace(/,$/, "")
+    .trim()
+    .toUpperCase();
+}
+
+function getAtfmValidTimeValue(value) {
+  if (!value) return 0;
+
+  const text = String(value).trim();
+
+  // K-ATFM format: MM-DD-YY HH:mm
+  // Example: 06-07-26 03:40
+  const m = text.match(/^(\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})$/);
+  if (!m) return 0;
+
+  const mm = Number(m[1]);
+  const dd = Number(m[2]);
+  const yy = Number(m[3]);
+  const hh = Number(m[4]);
+  const min = Number(m[5]);
+
+  const year = yy >= 70 ? 1900 + yy : 2000 + yy;
+
+  return new Date(Date.UTC(year, mm - 1, dd, hh, min)).getTime();
+}
+    
     /****************************************************
      * Count Badge
      ****************************************************/
